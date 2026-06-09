@@ -218,7 +218,36 @@ export default function Home(){
             </div>
             <div className="h-fit rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-sm text-blue-200">Host 3.0</div>
           </header>
+</header>
 
+<div className="mb-6 grid grid-cols-2 gap-2 md:hidden">
+  {[
+    ["dashboard", "Painel"],
+    ["properties", "Propriedades"],
+    ["reservations", "Reservas"],
+    ["calendar", "Calendário"],
+    ["cleaning", "Limpeza"],
+    ["finance", "Financeiro"],
+    ["airbnb", "Airbnb iCal"],
+    ["pricing", "Preços"],
+    ["guide", "Guia"],
+    ["settings", "Configurações"],
+  ].map(([id, label]) => (
+    <button
+      key={id}
+      onClick={() => setTab(id)}
+      className={`rounded-2xl px-3 py-3 text-sm font-semibold ${
+        tab === id
+          ? "bg-blue-600 text-white"
+          : "bg-white/10 text-white/70"
+      }`}
+    >
+      {label}
+    </button>
+  ))}
+</div>
+
+{tab==="dashboard"&&<>
           {tab==="dashboard"&&<>
             <Title title="Painel" desc="Visão geral."/>
             <div className="grid gap-4 md:grid-cols-5">
