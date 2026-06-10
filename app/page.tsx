@@ -265,12 +265,21 @@ const manutencao = properties.filter(p=>p.status==="Manutenção").length;
 </div>
           {tab==="dashboard"&&<>
             <Title title="Painel" desc="Visão geral."/>
-            <div className="grid gap-4 md:grid-cols-5">
+            <div className="grid gap-4 md:grid-cols-4 lg:grid-cols-4">
               <Metric title="Imóveis" value={properties.length}/><Metric title="Reservas" value={reservations.length}/>
-              <Metric title="Receita" value={money(revenue)}/><Metric title="Lucro" value={money(profit)}/><Metric title="Ocupação" value={`${occupancy}%`}/> 
+              <Metric title="Receita" value={money(revenue)}/><Metric title="Lucro" value={money(profit)}/><Metric title={
+    occupancy > 75
+      ? "🟢 Ocupação"
+      : occupancy >= 50
+      ? "🟡 Ocupação"
+      : "🔴 Ocupação"
+  }
+  value={`${occupancy}%`}
+/> 
 <Metric title="🟢 Livres" value={livres}/>
 <Metric title="🔴 Ocupados" value={ocupados}/>
 <Metric title="🟡 Manutenção" value={manutencao}/>
+<Metric title="🧹 Limpezas" value={pending}/>
             </div>
             <div className="mt-6 grid gap-5 md:grid-cols-2">
               <Box title="Próximas limpezas">{cleanings.length===0?<Empty text="Nenhuma limpeza."/>:cleanings.slice(0,5).map(c=><Row key={c.id} left={propName(c.propertyId)} right={`${c.date} • ${c.status}`}/>)}</Box>
