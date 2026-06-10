@@ -652,14 +652,6 @@ const monthlyOccupancy = [
     <p>Baseado em: fim de semana, feriado, alta ocupação e mercado local.</p>
   </div>
 </Box>
-  <div className="grid gap-3 md:grid-cols-5">
-    <Input label="Preço base" value="200" />
-    <Input label="Fim de semana %" value="15" />
-    <Input label="Feriado %" value="25" />
-    <Input label="Alta demanda %" value="20" />
-    <Input label="Evento local %" value="30" />
-  </div>
-</Box>
 
 <Box title="🤖 Simulação inteligente">
   <div className="grid gap-3 md:grid-cols-3">
