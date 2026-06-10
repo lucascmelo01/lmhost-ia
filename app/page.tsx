@@ -67,6 +67,11 @@ export default function Home(){
 const livres = properties.filter(p=>p.status==="Livre").length;
 const ocupados = properties.filter(p=>p.status==="Ocupado").length;
 const manutencao = properties.filter(p=>p.status==="Manutenção").length;
+const financialData = [
+  { nome:"Receita", valor: revenue },
+  { nome:"Despesas", valor: cost },
+  { nome:"Lucro", valor: profit }
+];
   const occupancy=useMemo(()=>{
     const nights=reservations.reduce((s,r)=>s+days(r.checkIn,r.checkOut),0);
     return Math.min(100,Math.round((nights/Math.max(1,properties.length*30))*100));
@@ -267,20 +272,59 @@ const manutencao = properties.filter(p=>p.status==="Manutenção").length;
             <Title title="Painel" desc="Visão geral."/>
             <div className="grid gap-4 md:grid-cols-4 lg:grid-cols-4">
               <Metric title="Imóveis" value={properties.length}/><Metric title="Reservas" value={reservations.length}/>
-              <Metric title="Receita" value={money(revenue)}/><Metric title="Lucro" value={money(profit)}/><Metric title={
+              <Metric title="Receita" value={money(revenue)}/><Metric title="Lucro" value={money(profit)}/><Box
+  title={
     occupancy > 75
       ? "🟢 Ocupação"
       : occupancy >= 50
       ? "🟡 Ocupação"
       : "🔴 Ocupação"
   }
-  value={`${occupancy}%`}
-/> 
+>
+  <p className="text-4xl font-black">{occupancy}%</p>
+
+  <div className="mt-4 h-3 rounded-full bg-white/10">
+    <div
+      className={`h-3 rounded-full ${
+        occupancy > 75
+          ? "bg-green-500"
+          : occupancy >= 50
+          ? "bg-yellow-400"
+          : "bg-red-500"
+      }`}
+      style={{ width: `${Math.min(100, occupancy)}%` }}
+    />
+  </div>
+
+  <p className="mt-3 text-sm text-white/50">
+    {occupancy > 75
+      ? "Excelente ocupação"
+      : occupancy >= 50
+      ? "Ocupação moderada"
+      : "Ocupação baixa"}
+  </p>
+</Box>
 <Metric title="🟢 Livres" value={livres}/>
 <Metric title="🔴 Ocupados" value={ocupados}/>
 <Metric title="🟡 Manutenção" value={manutencao}/>
 <Metric title="🧹 Limpezas" value={pending}/>
             </div>
+<Box title="📈 Resumo financeiro">
+  <div className="grid gap-3 md:grid-cols-3">
+    {financialData.map(item=>(
+      <div key={item.nome} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+        <p className="text-sm text-white/60">{item.nome}</p>
+        <p className="mt-1 text-2xl font-black">{money(item.valor)}</p>
+        <div className="mt-3 h-2 rounded-full bg-white/10">
+          <div
+            className="h-2 rounded-full bg-blue-500"
+            style={{width:`${Math.min(100, Math.max(8, Math.abs(item.valor)/(Math.max(1,revenue,cost,profit))*100))}%`}}
+          />
+        </div>
+      </div>
+    ))}
+  </div>
+</Box>
             <div className="mt-6 grid gap-5 md:grid-cols-2">
               <Box title="Próximas limpezas">{cleanings.length===0?<Empty text="Nenhuma limpeza."/>:cleanings.slice(0,5).map(c=><Row key={c.id} left={propName(c.propertyId)} right={`${c.date} • ${c.status}`}/>)}</Box>
               <Box title="Últimas reservas">{reservations.length===0?<Empty text="Nenhuma reserva."/>:reservations.slice(0,5).map(r=><Row key={r.id} left={`${r.guest} • ${propName(r.propertyId)}`} right={money(r.value)}/>)}</Box>
