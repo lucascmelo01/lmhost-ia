@@ -64,6 +64,9 @@ export default function Home(){
   const cost=expenses.reduce((s,e)=>s+e.value,0);
   const profit=revenue-cost;
   const pending=cleanings.filter(c=>c.status!=="Concluída").length;
+const livres = properties.filter(p=>p.status==="Livre").length;
+const ocupados = properties.filter(p=>p.status==="Ocupado").length;
+const manutencao = properties.filter(p=>p.status==="Manutenção").length;
   const occupancy=useMemo(()=>{
     const nights=reservations.reduce((s,r)=>s+days(r.checkIn,r.checkOut),0);
     return Math.min(100,Math.round((nights/Math.max(1,properties.length*30))*100));
@@ -264,7 +267,10 @@ export default function Home(){
             <Title title="Painel" desc="Visão geral."/>
             <div className="grid gap-4 md:grid-cols-5">
               <Metric title="Imóveis" value={properties.length}/><Metric title="Reservas" value={reservations.length}/>
-              <Metric title="Receita" value={money(revenue)}/><Metric title="Lucro" value={money(profit)}/><Metric title="Ocupação" value={`${occupancy}%`}/>
+              <Metric title="Receita" value={money(revenue)}/><Metric title="Lucro" value={money(profit)}/><Metric title="Ocupação" value={`${occupancy}%`}/> 
+<Metric title="🟢 Livres" value={livres}/>
+<Metric title="🔴 Ocupados" value={ocupados}/>
+<Metric title="🟡 Manutenção" value={manutencao}/>
             </div>
             <div className="mt-6 grid gap-5 md:grid-cols-2">
               <Box title="Próximas limpezas">{cleanings.length===0?<Empty text="Nenhuma limpeza."/>:cleanings.slice(0,5).map(c=><Row key={c.id} left={propName(c.propertyId)} right={`${c.date} • ${c.status}`}/>)}</Box>
@@ -296,6 +302,13 @@ export default function Home(){
             </Box>
             <div className="grid gap-4 md:grid-cols-2">{properties.length===0?<Empty text="Nenhuma propriedade."/>:properties.map(p=><Box key={p.id} title={p.name}>
               <p className="text-white/60">{p.type} • {p.address}</p>
+              <p className="mt-1 text-sm text-blue-300">
+ {p.status==="Livre"
+ ? "🟢 Livre"
+ : p.status==="Ocupado"
+ ? "🔴 Ocupado"
+ : "🟡 Manutenção"}
+</p>
               <p className="mt-2 text-blue-300">Diária: {money(p.dailyRate)} • Limpeza: {money(p.cleaningFee)}</p>
               <button onClick={()=>deleteProperty(p.id)} className="mt-3 text-sm text-red-300">Excluir propriedade</button>
             </Box>)}</div>
