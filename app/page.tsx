@@ -218,8 +218,6 @@ export default function Home(){
             </div>
             <div className="h-fit rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-sm text-blue-200">Host 3.0</div>
           </header>
-</header>
-
 <div className="mb-6 grid grid-cols-2 gap-2 md:hidden">
   {[
     ["dashboard", "Painel"],
@@ -235,7 +233,7 @@ export default function Home(){
   ].map(([id, label]) => (
     <button
       key={id}
-      onClick={() => setTab(id)}
+      onClick={() => setTab(id as string)}
       className={`rounded-2xl px-3 py-3 text-sm font-semibold ${
         tab === id
           ? "bg-blue-600 text-white"
@@ -246,8 +244,6 @@ export default function Home(){
     </button>
   ))}
 </div>
-
-{tab==="dashboard"&&<>
           {tab==="dashboard"&&<>
             <Title title="Painel" desc="Visão geral."/>
             <div className="grid gap-4 md:grid-cols-5">
