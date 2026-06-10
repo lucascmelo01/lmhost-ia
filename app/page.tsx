@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { supabase } from "../lib/supabase";
 
-type Property = { id:string; name:string; type:string; address:string; dailyRate:number; cleaningFee:number; guests:number; wifi:string; password:string; ical:string };
+type Property = { id:string; name:string; type:string; address:string; dailyRate:number; cleaningFee:number; guests:number; wifi:string; password:string; ical:string; status:string; };
 type Reservation = { id:string; propertyId:string; guest:string; checkIn:string; checkOut:string; value:number; source:string };
 type Cleaning = { id:string; propertyId:string; date:string; status:"Pendente"|"Em andamento"|"Concluída" };
 type Expense = { id:string; propertyId:string; title:string; value:number; date:string };
@@ -20,7 +20,7 @@ export default function Home(){
   const [cleanings,setCleanings]=useState<Cleaning[]>([]);
   const [expenses,setExpenses]=useState<Expense[]>([]);
 
-  const [property,setProperty]=useState({name:"",type:"Apartamento",address:"",dailyRate:"",cleaningFee:"",guests:"2",wifi:"",password:"",ical:""});
+  const [property,setProperty]=useState({name:"",type:"Apartamento",address:"",dailyRate:"",cleaningFee:"",guests:"2",wifi:"",password:"",ical:"",status:"Livre" });
   const [reservation,setReservation]=useState({propertyId:"",guest:"",checkIn:"",checkOut:"",value:"",source:"Manual"});
   const [expense,setExpense]=useState({propertyId:"",title:"",value:"",date:""});
 
@@ -285,6 +285,12 @@ export default function Home(){
                 <Input label="Wi-Fi" value={property.wifi} onChange={v=>setProperty({...property,wifi:v})}/>
                 <Input label="Senha Wi-Fi" value={property.password} onChange={v=>setProperty({...property,password:v})}/>
                 <Input label="Link iCal Airbnb" value={property.ical} onChange={v=>setProperty({...property,ical:v})}/>
+                <Select
+  label="Status"
+  value={property.status}
+  onChange={v=>setProperty({...property,status:v})}
+  options={["Livre","Ocupado","Manutenção"]}
+/>
               </div>
               <Button onClick={addProperty}>Salvar propriedade</Button>
             </Box>
