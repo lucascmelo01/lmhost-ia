@@ -270,7 +270,7 @@ const financialData = [
 </div>
           {tab==="dashboard"&&<>
             <Title title="Painel" desc="Visão geral."/>
-            <div className="grid gap-4 md:grid-cols-4 lg:grid-cols-4">
+            <div className="grid gap-8 md:grid-cols-4 lg:grid-cols-4">
               <Metric title="Imóveis" value={properties.length}/><Metric title="Reservas" value={reservations.length}/>
               <Metric title="Receita" value={money(revenue)}/><Metric title="Lucro" value={money(profit)}/><Box
   title={
@@ -383,7 +383,7 @@ const financialData = [
             <Box title="Reservas cadastradas">{reservations.length===0?<Empty text="Nenhuma reserva."/>:reservations.map(r=><Line key={r.id} left={`${r.guest} • ${propName(r.propertyId)}`} right={`${r.checkIn} até ${r.checkOut} • ${money(r.value)}`} onDelete={()=>deleteReservation(r.id)}/>)}</Box>
           </>}
 
-          {tab==="calendar"&&<><Title title="Calendário" desc="Check-ins e check-outs."/><div className="mt-4 grid grid-cols-7 gap-2">
+          {tab==="calendar"&&<><Title title="Calendário" desc="Check-ins e check-outs."/><div className="mt-4 mb-8 grid grid-cols-7 gap-3">
   {["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"].map(d=>(
     <div key={d} className="text-center text-xs font-bold text-white/40">{d}</div>
   ))}
