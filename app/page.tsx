@@ -63,6 +63,14 @@ export default function Home(){
   const revenue=reservations.reduce((s,r)=>s+r.value,0);
   const cost=expenses.reduce((s,e)=>s+e.value,0);
   const profit=revenue-cost;
+const monthlyRevenue = [
+  { mes: "Jan", valor: 0 },
+  { mes: "Fev", valor: 0 },
+  { mes: "Mar", valor: 0 },
+  { mes: "Abr", valor: 0 },
+  { mes: "Mai", valor: 0 },
+  { mes: "Jun", valor: revenue }
+];
   const pending=cleanings.filter(c=>c.status!=="Concluída").length;
 const livres = properties.filter(p=>p.status==="Livre").length;
 const ocupados = properties.filter(p=>p.status==="Ocupado").length;
@@ -76,6 +84,14 @@ const financialData = [
     const nights=reservations.reduce((s,r)=>s+days(r.checkIn,r.checkOut),0);
     return Math.min(100,Math.round((nights/Math.max(1,properties.length*30))*100));
   },[reservations,properties]);
+const monthlyOccupancy = [
+  { mes: "Jan", valor: 0 },
+  { mes: "Fev", valor: 0 },
+  { mes: "Mar", valor: 0 },
+  { mes: "Abr", valor: 0 },
+  { mes: "Mai", valor: 0 },
+  { mes: "Jun", valor: occupancy }
+];
 
   const propName=(id:string)=>properties.find(p=>p.id===id)?.name||"Imóvel removido";
 
@@ -319,6 +335,57 @@ const financialData = [
           <div
             className="h-2 rounded-full bg-blue-500"
             style={{width:`${Math.min(100, Math.max(8, Math.abs(item.valor)/(Math.max(1,revenue,cost,profit))*100))}%`}}
+          />
+        </div>
+      </div>
+    ))}
+  </div>
+</Box>
+<Box title="📈 Receita Mensal">
+  <div className="space-y-3">
+    {monthlyRevenue.map(item => (
+      <div key={item.mes}>
+        <div className="flex justify-between text-sm mb-1">
+          <span>{item.mes}</span>
+          <span>{money(item.valor)}</span>
+        </div>
+
+        <div className="h-3 rounded-full bg-white/10">
+          <div
+            className="h-3 rounded-full bg-blue-500 rounded-full"
+            style={{
+              width: `${Math.max(
+                5,
+                (item.valor / Math.max(revenue, 1)) * 100
+              )}%`
+            }}
+          />
+        </div>
+      </div>
+    ))}
+  </div>
+</Box>
+<Box title="📊 Ocupação Mensal">
+  <div className="space-y-3">
+    {monthlyOccupancy.map(item => (
+      <div key={item.mes}>
+        <div className="flex justify-between text-sm mb-1">
+          <span>{item.mes}</span>
+          <span>{item.valor}%</span>
+        </div>
+
+        <div className="h-3 rounded-full bg-white/10">
+          <div
+            className={`h-3 rounded-full ${
+              item.valor > 75
+                ? "bg-green-500"
+                : item.valor >= 50
+                ? "bg-yellow-400"
+                : "bg-red-500"
+            }`}
+            style={{
+              width: `${Math.max(5, Math.min(100, item.valor))}%`
+            }}
           />
         </div>
       </div>
