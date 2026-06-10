@@ -43,7 +43,7 @@ export default function Home(){
     setProperties((p.data||[]).map(x=>({
       id:x.id, name:x.name, type:x.type||"", address:x.address||"",
       dailyRate:Number(x.daily_rate||0), cleaningFee:Number(x.cleaning_fee||0),
-      guests:Number(x.guests||1), wifi:x.wifi||"", password:x.password||"", ical:x.ical||""
+      guests:Number(x.guests||1), wifi:x.wifi||"", password:x.password||"", ical:x.ical||"", status:x.status||"Livre",
     })));
 
     setReservations((r.data||[]).map(x=>({
