@@ -519,7 +519,155 @@ const monthlyOccupancy = [
           </>}
 
           {tab==="airbnb"&&<><Title title="Airbnb iCal" desc="Integração inicial."/><Box title="Sincronização"><p className="text-white/60">Por enquanto simula iCal. Próximo passo: importação real .ics.</p><Button onClick={mockAirbnbSync}>Simular sincronização</Button></Box></>}
-          {tab==="pricing"&&<><Title title="Preços" desc="Sugestões simples."/><Box title="Sugestões">{properties.length===0?<Empty text="Cadastre imóvel."/>:properties.map(p=><Row key={p.id} left={p.name} right={`Semana ${money(p.dailyRate)} • FDS ${money(p.dailyRate*1.2)}`}/>)}</Box></>}
+          {tab==="pricing"&&<>
+<Title
+  title="🧠 Precificação Inteligente com IA"
+  desc="Análise de mercado, eventos, ocupação e sugestões automáticas."
+/>
+<Box title="⚙️ Regras de preço">
+<Box title="🏙️ Perfil do Mercado">
+  <div className="grid gap-3 md:grid-cols-4">
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Cidade</p>
+      <p className="mt-1 text-xl font-black">Teresina</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Perfil</p>
+      <p className="mt-1 text-xl font-black">🏭 Corporativo</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Preço Médio</p>
+      <p className="mt-1 text-xl font-black">R$ 240</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Mercado</p>
+      <p className="mt-1 text-xl font-black">🟢 Aquecido</p>
+    </div>
+
+  </div>
+</Box>
+<Box title="📊 Análise de Mercado">
+  <div className="grid gap-3 md:grid-cols-4">
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Seu Preço</p>
+      <p className="mt-1 text-xl font-black">R$ 200</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Preço Médio</p>
+      <p className="mt-1 text-xl font-black">R$ 240</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Faixa Recomendada</p>
+      <p className="mt-1 text-xl font-black">220-280</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Status</p>
+      <p className="mt-1 text-xl font-black">🟢 Competitivo</p>
+    </div>
+
+  </div>
+</Box>
+<Box title="🤖 Explicação da IA">
+  <div className="space-y-3">
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p>🏭 Perfil corporativo detectado</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p>📈 Mercado local aquecido</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p>📅 Próximos eventos podem impactar a demanda</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p>💡 Faixa recomendada: R$220 - R$280</p>
+    </div>
+
+  </div>
+</Box>
+<Box title="💡 Preço Sugerido pela IA">
+  <div className="grid gap-3 md:grid-cols-3">
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Preço base</p>
+      <p className="mt-1 text-2xl font-black">R$ 200</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Ajustes aplicados</p>
+      <p className="mt-1 text-xl font-black">+60%</p>
+      <p className="mt-1 text-xs text-white/50">Limite máximo do LMHOST</p>
+    </div>
+
+    <div className="rounded-2xl border border-green-500/30 bg-green-500/10 p-4">
+      <p className="text-sm text-green-300">Preço sugerido</p>
+      <p className="mt-1 text-3xl font-black text-green-300">R$ 320</p>
+    </div>
+
+  </div>
+
+  <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-sm text-white/70">
+    <p>Baseado em: fim de semana, feriado, alta ocupação e mercado local.</p>
+  </div>
+</Box>
+  <div className="grid gap-3 md:grid-cols-5">
+    <Input label="Preço base" value="200" />
+    <Input label="Fim de semana %" value="15" />
+    <Input label="Feriado %" value="25" />
+    <Input label="Alta demanda %" value="20" />
+    <Input label="Evento local %" value="30" />
+  </div>
+</Box>
+
+<Box title="🤖 Simulação inteligente">
+  <div className="grid gap-3 md:grid-cols-3">
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Dia comum</p>
+      <p className="mt-1 text-2xl font-black">R$ 200</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Fim de semana</p>
+      <p className="mt-1 text-2xl font-black">R$ 260</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Feriado</p>
+      <p className="mt-1 text-2xl font-black">R$ 300</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Alta demanda</p>
+      <p className="mt-1 text-2xl font-black">R$ 280</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Evento local</p>
+      <p className="mt-1 text-2xl font-black">R$ 250</p>
+    </div>
+  </div>
+</Box>
+
+<Box title="📌 Feriados e eventos">
+  <div className="space-y-2 text-sm text-white/80">
+    <p>🎭 Carnaval: aplicar +50%</p>
+    <p>🔥 São João: aplicar +40%</p>
+    <p>🎆 Réveillon: aplicar +80%</p>
+    <p>🏖️ Férias escolares: aplicar +30%</p>
+  </div>
+</Box>
+</>}
           {tab==="guide"&&<><Title title="Guia do Hóspede" desc="Modelo para QR Code."/><Box title="Guia">{properties.map(p=><Row key={p.id} left={p.name} right={`Wi-Fi: ${p.wifi||"não informado"} • Senha: ${p.password||"não informada"}`}/>)}</Box></>}
           {tab==="settings"&&<><Title title="Configurações" desc="Dados online."/><Box title="Banco"><p className="text-white/60">Agora os dados estão no Supabase.</p><Button onClick={clearAll}>Limpar tudo</Button></Box></>}
         </section>
