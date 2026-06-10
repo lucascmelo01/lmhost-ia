@@ -14,6 +14,7 @@ const days=(a:string,b:string)=>!a||!b?0:Math.max(1,Math.round((new Date(b).getT
 export default function Home(){
   const [logged,setLogged]=useState(false);
   const [tab,setTab]=useState("dashboard");
+  const [menuOpen,setMenuOpen]=useState(false);
   const [properties,setProperties]=useState<Property[]>([]);
   const [reservations,setReservations]=useState<Reservation[]>([]);
   const [cleanings,setCleanings]=useState<Cleaning[]>([]);
@@ -218,31 +219,46 @@ export default function Home(){
             </div>
             <div className="h-fit rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-sm text-blue-200">Host 3.0</div>
           </header>
-<div className="mb-6 grid grid-cols-2 gap-2 md:hidden">
-  {[
-    ["dashboard", "Painel"],
-    ["properties", "Propriedades"],
-    ["reservations", "Reservas"],
-    ["calendar", "Calendário"],
-    ["cleaning", "Limpeza"],
-    ["finance", "Financeiro"],
-    ["airbnb", "Airbnb iCal"],
-    ["pricing", "Preços"],
-    ["guide", "Guia"],
-    ["settings", "Configurações"],
-  ].map(([id, label]) => (
-    <button
-      key={id}
-      onClick={() => setTab(id as string)}
-      className={`rounded-2xl px-3 py-3 text-sm font-semibold ${
-        tab === id
-          ? "bg-blue-600 text-white"
-          : "bg-white/10 text-white/70"
-      }`}
-    >
-      {label}
-    </button>
-  ))}
+<div className="mb-6 md:hidden">
+  <button
+    onClick={() => setMenuOpen(!menuOpen)}
+    className="flex w-full items-center justify-between rounded-2xl bg-blue-600 px-5 py-4 text-lg font-bold text-white"
+  >
+    <span>☰ Menu</span>
+    <span>{menuOpen ? "▲" : "▼"}</span>
+  </button>
+
+  {menuOpen && (
+    <div className="mt-3 grid grid-cols-2 gap-2">
+      {[
+        ["dashboard", "Painel"],
+        ["properties", "Propriedades"],
+        ["reservations", "Reservas"],
+        ["calendar", "Calendário"],
+        ["cleaning", "Limpeza"],
+        ["finance", "Financeiro"],
+        ["airbnb", "Airbnb iCal"],
+        ["pricing", "Preços"],
+        ["guide", "Guia"],
+        ["settings", "Configurações"],
+      ].map(([id, label]) => (
+        <button
+          key={id}
+          onClick={() => {
+            setTab(id as string);
+            setMenuOpen(false);
+          }}
+          className={`rounded-2xl px-3 py-3 text-sm font-semibold ${
+            tab === id
+              ? "bg-blue-600 text-white"
+              : "bg-white/10 text-white/70"
+          }`}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  )}
 </div>
           {tab==="dashboard"&&<>
             <Title title="Painel" desc="Visão geral."/>
