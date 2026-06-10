@@ -524,7 +524,6 @@ const monthlyOccupancy = [
   title="🧠 Precificação Inteligente com IA"
   desc="Análise de mercado, eventos, ocupação e sugestões automáticas."
 />
-<Box title="⚙️ Regras de preço">
 <Box title="🏙️ Perfil do Mercado">
   <div className="grid gap-3 md:grid-cols-4">
 
@@ -549,6 +548,38 @@ const monthlyOccupancy = [
     </div>
 
   </div>
+</Box>
+<Box title="⚡ Regras de preço">
+
+  <div className="grid gap-3 md:grid-cols-5">
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Preço Base</p>
+      <p className="mt-1 text-xl font-black">R$ 200</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Fim de Semana</p>
+      <p className="mt-1 text-xl font-black">+15%</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Feriado</p>
+      <p className="mt-1 text-xl font-black">+25%</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Alta Ocupação</p>
+      <p className="mt-1 text-xl font-black">+20%</p>
+    </div>
+
+    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+      <p className="text-sm text-white/60">Evento Regional</p>
+      <p className="mt-1 text-xl font-black">+30%</p>
+    </div>
+
+  </div>
+
 </Box>
 <Box title="📊 Análise de Mercado">
   <div className="grid gap-3 md:grid-cols-4">
