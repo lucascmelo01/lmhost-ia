@@ -184,7 +184,7 @@ export default function Home(){
     <main className="min-h-screen bg-[#050816] text-white flex items-center justify-center p-6">
       <div className="w-full max-w-md rounded-[2rem] border border-white/10 bg-white/[0.06] p-8 shadow-2xl">
         <h1 className="text-4xl font-black">LMHOST IA</h1>
-        <p className="text-blue-300 mb-8">Host 3.0 Online</p>
+        <p className="text-blue-300 mb-8">LMHOST PRO</p>
         <Input label="Email" value="lucas@lmhost.com" onChange={()=>{}} />
         <div className="mt-4"><Input label="Senha" type="password" value="123456" onChange={()=>{}} /></div>
         <button onClick={login} className="mt-5 w-full rounded-2xl bg-blue-600 p-4 font-bold">Entrar</button>
@@ -215,7 +215,7 @@ export default function Home(){
           <header className="mb-8 flex justify-between gap-4">
             <div>
               <h2 className="text-4xl font-black">LMHOST IA</h2>
-              <p className="text-white/50">Sistema online de hospedagens.</p>
+              <p className="text-white/50">Gestao inteligente de hospedagens.</p>
             </div>
             <div className="h-fit rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-sm text-blue-200">Host 3.0</div>
           </header>
@@ -231,16 +231,16 @@ export default function Home(){
   {menuOpen && (
     <div className="mt-3 grid grid-cols-2 gap-2">
       {[
-        ["dashboard", "Painel"],
-        ["properties", "Propriedades"],
-        ["reservations", "Reservas"],
-        ["calendar", "Calendário"],
-        ["cleaning", "Limpeza"],
-        ["finance", "Financeiro"],
-        ["airbnb", "Airbnb iCal"],
-        ["pricing", "Preços"],
-        ["guide", "Guia"],
-        ["settings", "Configurações"],
+        ["dashboard", "📊 Painel"],
+["properties", "🏠 Propriedades"],
+["reservations", "📅 Reservas"],
+["calendar", "🗓️ Calendário"],
+["cleaning", "🧹 Limpeza"],
+["finance", "💰 Financeiro"],
+["airbnb", "🔗 Airbnb iCal"],
+["pricing", "⚡ Preços"],
+["guide", "📖 Guia"],
+["settings", "⚙️ Configurações"],
       ].map(([id, label]) => (
         <button
           key={id}
@@ -347,7 +347,7 @@ export default function Home(){
 }
 
 function Title({title,desc}:{title:string;desc:string}){return <div className="mb-5"><h2 className="text-3xl font-black capitalize">{title}</h2><p className="text-white/50">{desc}</p></div>}
-function Metric({title,value}:{title:string;value:string|number}){return <div className="rounded-3xl border border-white/10 bg-white/[0.06] p-5 shadow-xl"><p className="text-sm text-white/50">{title}</p><p className="mt-2 text-2xl font-black">{value}</p></div>}
+function Metric({title,value}:{title:string;value:string|number}){return <div className="rounded-3xl border border-white/10 bg-white/[0.06] p-4 shadow-xl"><p className="text-sm text-white/50">{title}</p><p className="mt-1 text-xl font-black">{value}</p></div>}
 function Box({title,children}:{title:string;children:ReactNode}){return <div className="mb-5 rounded-3xl border border-white/10 bg-white/[0.06] p-5 shadow-2xl"><h3 className="mb-4 text-xl font-bold lowercase">{title}</h3>{children}</div>}
 function Empty({text}:{text:string}){return <div className="rounded-2xl border border-dashed border-white/15 p-5 text-white/40">{text}</div>}
 function Row({left,right}:{left:string;right:string}){return <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 border-b border-white/10 py-3 last:border-0"><span>{left}</span><span className="text-sm text-white/50">{right}</span></div>}
