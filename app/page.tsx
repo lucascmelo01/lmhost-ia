@@ -79,7 +79,7 @@ export default function Home(){
     const {data,error}=await supabase.from("properties").insert({
       name:property.name,type:property.type,address:property.address,
       daily_rate:Number(property.dailyRate||0),cleaning_fee:Number(property.cleaningFee||0),
-      guests:Number(property.guests||1),wifi:property.wifi,password:property.password,ical:property.ical
+      guests:Number(property.guests||1),wifi:property.wifi,password:property.password,ical:property.ical,status:property.status
     }).select().single();
 
     if(error){console.error(error);return alert("Erro ao salvar propriedade.");}
@@ -87,10 +87,10 @@ export default function Home(){
     setProperties([{
       id:data.id,name:data.name,type:data.type||"",address:data.address||"",
       dailyRate:Number(data.daily_rate||0),cleaningFee:Number(data.cleaning_fee||0),
-      guests:Number(data.guests||1),wifi:data.wifi||"",password:data.password||"",ical:data.ical||""
+      guests:Number(data.guests||1),wifi:data.wifi||"",password:data.password||"",ical:data.ical||"",status:data.status||"livre"
     },...properties]);
 
-    setProperty({name:"",type:"Apartamento",address:"",dailyRate:"",cleaningFee:"",guests:"2",wifi:"",password:"",ical:""});
+    setProperty({name:"",type:"Apartamento",address:"",dailyRate:"",cleaningFee:"",guests:"2",wifi:"",password:"",ical:"",status:"livre"});
   }
 
   async function deleteProperty(id:string){
