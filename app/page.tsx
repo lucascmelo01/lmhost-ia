@@ -383,7 +383,50 @@ const financialData = [
             <Box title="Reservas cadastradas">{reservations.length===0?<Empty text="Nenhuma reserva."/>:reservations.map(r=><Line key={r.id} left={`${r.guest} • ${propName(r.propertyId)}`} right={`${r.checkIn} até ${r.checkOut} • ${money(r.value)}`} onDelete={()=>deleteReservation(r.id)}/>)}</Box>
           </>}
 
-          {tab==="calendar"&&<><Title title="Calendário" desc="Check-ins e check-outs."/><Box title="Eventos">{reservations.length===0?<Empty text="Nenhum evento."/>:reservations.map(r=><Line key={r.id} left={`${r.checkIn} Check-in / ${r.checkOut} Check-out`} right={`${r.guest} • ${propName(r.propertyId)}`} onDelete={()=>deleteReservation(r.id)}/>)}</Box></>}
+          {tab==="calendar"&&<><Title title="Calendário" desc="Check-ins e check-outs."/><div className="mt-4 grid grid-cols-7 gap-2">
+  {["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"].map(d=>(
+    <div key={d} className="text-center text-xs font-bold text-white/40">{d}</div>
+  ))}
+
+  {[...Array(31)].map((_,day)=>{
+    const dia = day + 1;
+
+    const reservaDoDia = reservations.find(r=>{
+      if(!r.checkIn || !r.checkOut) return false;
+      const entrada = new Date(r.checkIn).getDate();
+      const saida = new Date(r.checkOut).getDate();
+      return dia >= entrada && dia <= saida;
+    });
+
+    const isCheckIn = reservations.some(r=>r.checkIn && new Date(r.checkIn).getDate()===dia);
+    const isCheckOut = reservations.some(r=>r.checkOut && new Date(r.checkOut).getDate()===dia);
+
+    return (
+      <div
+        key={dia}
+        className={`rounded-xl border border-white/10 p-3 min-h-[86px] ${
+          reservaDoDia ? "bg-blue-600/35" : "bg-white/[0.03]"
+        }`}
+      >
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-bold text-white/70">{dia}</span>
+          {reservaDoDia && <span className="text-xs">🔵</span>}
+        </div>
+
+        {reservaDoDia ? (
+          <div className="mt-2 space-y-1 text-xs">
+            <p className="font-bold text-blue-200">Ocupado</p>
+            <p className="text-white/60">{propName(reservaDoDia.propertyId)}</p>
+            {isCheckIn && <p className="text-green-300">Entrada</p>}
+            {isCheckOut && <p className="text-red-300">Saída</p>}
+          </div>
+        ) : (
+          <p className="mt-2 text-xs text-white/30">Livre</p>
+        )}
+      </div>
+    );
+  })}
+</div><Box title="Eventos">{reservations.length===0?<Empty text="Nenhum evento."/>:reservations.map(r=><Line key={r.id} left={`${r.checkIn} Check-in / ${r.checkOut} Check-out`} right={`${r.guest} • ${propName(r.propertyId)}`} onDelete={()=>deleteReservation(r.id)}/>)}</Box></>}
 
           {tab==="cleaning"&&<><Title title="Limpeza" desc="Controle pós check-out."/><Metric title="Limpezas pendentes" value={pending}/><div className="mt-5 grid gap-4 md:grid-cols-2">{cleanings.length===0?<Empty text="Nenhuma limpeza."/>:cleanings.map(c=><Box key={c.id} title={propName(c.propertyId)}>
             <p className="text-white/60">Data: {c.date}</p>
