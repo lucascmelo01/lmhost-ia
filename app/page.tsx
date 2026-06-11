@@ -19,6 +19,7 @@ export default function Home(){
   const [reservations,setReservations]=useState<Reservation[]>([]);
   const [cleanings,setCleanings]=useState<Cleaning[]>([]);
   const [expenses,setExpenses]=useState<Expense[]>([]);
+  const [pricingPropertyId,setPricingPropertyId]=useState("");
 
   const [property,setProperty]=useState({name:"",type:"Apartamento",address:"",dailyRate:"",cleaningFee:"",guests:"2",wifi:"",password:"",ical:"",status:"Livre" });
   const [reservation,setReservation]=useState({propertyId:"",guest:"",checkIn:"",checkOut:"",value:"",source:"Manual"});
@@ -84,6 +85,16 @@ const financialData = [
     const nights=reservations.reduce((s,r)=>s+days(r.checkIn,r.checkOut),0);
     return Math.min(100,Math.round((nights/Math.max(1,properties.length*30))*100));
   },[reservations,properties]);
+const pricingProperty = properties.find(p=>p.id===pricingPropertyId) || properties[0];
+
+const aiBase = pricingProperty ? Number(pricingProperty.dailyRate || 0) : 0;
+const aiLow = Math.round(aiBase * 0.9);
+const aiNormal = aiBase;
+const aiWeekend = Math.round(aiBase * 1.15);
+const aiHoliday = Math.round(aiBase * 1.25);
+const aiEvent = Math.round(aiBase * 1.3);
+const aiHigh = Math.round(aiBase * 1.2);
+const aiSuggested = Math.min(Math.round(aiBase * 1.6), aiEvent);
 const monthlyOccupancy = [
   { mes: "Jan", valor: 0 },
   { mes: "Fev", valor: 0 },
@@ -521,175 +532,79 @@ const monthlyOccupancy = [
           {tab==="airbnb"&&<><Title title="Airbnb iCal" desc="Integração inicial."/><Box title="Sincronização"><p className="text-white/60">Por enquanto simula iCal. Próximo passo: importação real .ics.</p><Button onClick={mockAirbnbSync}>Simular sincronização</Button></Box></>}
           {tab==="pricing"&&<>
 <Title
-  title="🧠 Precificação Inteligente com IA"
-  desc="Análise de mercado, eventos, ocupação e sugestões automáticas."
+  title="🤖 Precificação Inteligente com IA"
+  desc="Análise automática com base no imóvel, mercado, eventos e ocupação."
 />
-<Box title="🏙️ Perfil do Mercado">
-  <div className="grid gap-3 md:grid-cols-4">
 
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Cidade</p>
-      <p className="mt-1 text-xl font-black">Teresina</p>
-    </div>
+{properties.length===0?(
+  <Box title="Cadastre um imóvel">
+    <p className="text-white/60">
+      Para gerar uma precificação inteligente, primeiro cadastre um imóvel na aba Propriedades.
+    </p>
+  </Box>
+):(
+  <>
+    <Box title="🏠 Escolha o imóvel">
+      <select
+        className="w-full rounded-2xl bg-[#101833] border border-white/10 p-4 text-white"
+        value={pricingPropertyId}
+        onChange={e=>setPricingPropertyId(e.target.value)}
+      >
+        {properties.map(p=>(
+          <option key={p.id} value={p.id}>{p.name}</option>
+        ))}
+      </select>
+    </Box>
 
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Perfil</p>
-      <p className="mt-1 text-xl font-black">🏭 Corporativo</p>
-    </div>
+    <Box title="📊 Análise do imóvel">
+      <div className="grid gap-3 md:grid-cols-4">
+        <Metric title="🏠 Imóvel" value={pricingProperty?.name || "-"}/>
+        <Metric title="📍 Endereço" value={pricingProperty?.address || "-"}/>
+        <Metric title="👥 Hóspedes" value={pricingProperty?.guests || 0}/>
+        <Metric title="💰 Diária atual" value={money(aiBase)}/>
+      </div>
+    </Box>
 
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Preço Médio</p>
-      <p className="mt-1 text-xl font-black">R$ 240</p>
-    </div>
+    <Box title="🤖 Preço sugerido pela IA">
+      <div className="grid gap-3 md:grid-cols-3">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+          <p className="text-sm text-white/60">Preço base</p>
+          <p className="mt-1 text-2xl font-black">{money(aiBase)}</p>
+        </div>
 
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Mercado</p>
-      <p className="mt-1 text-xl font-black">🟢 Aquecido</p>
-    </div>
+        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+          <p className="text-sm text-white/60">Limite máximo</p>
+          <p className="mt-1 text-2xl font-black">+60%</p>
+        </div>
 
-  </div>
-</Box>
-<Box title="⚡ Regras de preço">
+        <div className="rounded-2xl border border-green-500/30 bg-green-500/10 p-4">
+          <p className="text-sm text-green-300">Sugestão IA</p>
+          <p className="mt-1 text-3xl font-black text-green-300">{money(aiSuggested)}</p>
+        </div>
+      </div>
+    </Box>
 
-  <div className="grid gap-3 md:grid-cols-5">
+    <Box title="📈 Cenários automáticos">
+      <div className="grid gap-3 md:grid-cols-3">
+        <Metric title="📉 Baixa ocupação" value={money(aiLow)}/>
+        <Metric title="📅 Dia comum" value={money(aiNormal)}/>
+        <Metric title="🌙 Fim de semana" value={money(aiWeekend)}/>
+        <Metric title="🎉 Feriado" value={money(aiHoliday)}/>
+        <Metric title="🔥 Evento regional" value={money(aiEvent)}/>
+        <Metric title="🚀 Alta demanda" value={money(aiHigh)}/>
+      </div>
+    </Box>
 
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Preço Base</p>
-      <p className="mt-1 text-xl font-black">R$ 200</p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Fim de Semana</p>
-      <p className="mt-1 text-xl font-black">+15%</p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Feriado</p>
-      <p className="mt-1 text-xl font-black">+25%</p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Alta Ocupação</p>
-      <p className="mt-1 text-xl font-black">+20%</p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Evento Regional</p>
-      <p className="mt-1 text-xl font-black">+30%</p>
-    </div>
-
-  </div>
-
-</Box>
-<Box title="📊 Análise de Mercado">
-  <div className="grid gap-3 md:grid-cols-4">
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Seu Preço</p>
-      <p className="mt-1 text-xl font-black">R$ 200</p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Preço Médio</p>
-      <p className="mt-1 text-xl font-black">R$ 240</p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Faixa Recomendada</p>
-      <p className="mt-1 text-xl font-black">220-280</p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Status</p>
-      <p className="mt-1 text-xl font-black">🟢 Competitivo</p>
-    </div>
-
-  </div>
-</Box>
-<Box title="🤖 Explicação da IA">
-  <div className="space-y-3">
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p>🏭 Perfil corporativo detectado</p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p>📈 Mercado local aquecido</p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p>📅 Próximos eventos podem impactar a demanda</p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p>💡 Faixa recomendada: R$220 - R$280</p>
-    </div>
-
-  </div>
-</Box>
-<Box title="💡 Preço Sugerido pela IA">
-  <div className="grid gap-3 md:grid-cols-3">
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Preço base</p>
-      <p className="mt-1 text-2xl font-black">R$ 200</p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Ajustes aplicados</p>
-      <p className="mt-1 text-xl font-black">+60%</p>
-      <p className="mt-1 text-xs text-white/50">Limite máximo do LMHOST</p>
-    </div>
-
-    <div className="rounded-2xl border border-green-500/30 bg-green-500/10 p-4">
-      <p className="text-sm text-green-300">Preço sugerido</p>
-      <p className="mt-1 text-3xl font-black text-green-300">R$ 320</p>
-    </div>
-
-  </div>
-
-  <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-sm text-white/70">
-    <p>Baseado em: fim de semana, feriado, alta ocupação e mercado local.</p>
-  </div>
-</Box>
-
-<Box title="🤖 Simulação inteligente">
-  <div className="grid gap-3 md:grid-cols-3">
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Dia comum</p>
-      <p className="mt-1 text-2xl font-black">R$ 200</p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Fim de semana</p>
-      <p className="mt-1 text-2xl font-black">R$ 260</p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Feriado</p>
-      <p className="mt-1 text-2xl font-black">R$ 300</p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Alta demanda</p>
-      <p className="mt-1 text-2xl font-black">R$ 280</p>
-    </div>
-
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-sm text-white/60">Evento local</p>
-      <p className="mt-1 text-2xl font-black">R$ 250</p>
-    </div>
-  </div>
-</Box>
-
-<Box title="📌 Feriados e eventos">
-  <div className="space-y-2 text-sm text-white/80">
-    <p>🎭 Carnaval: aplicar +50%</p>
-    <p>🔥 São João: aplicar +40%</p>
-    <p>🎆 Réveillon: aplicar +80%</p>
-    <p>🏖️ Férias escolares: aplicar +30%</p>
-  </div>
-</Box>
+    <Box title="🧠 Explicação da IA">
+      <div className="space-y-2 text-white/70">
+        <p>• A IA analisou a diária atual do imóvel.</p>
+        <p>• Aplicou regras de fim de semana, feriados, eventos e ocupação.</p>
+        <p>• O preço sugerido respeita o limite máximo de +60%.</p>
+        <p>• Amanhã, com o iCal, a ocupação real vai alimentar essa análise automaticamente.</p>
+      </div>
+    </Box>
+  </>
+)}
 </>}
           {tab==="guide"&&<><Title title="Guia do Hóspede" desc="Modelo para QR Code."/><Box title="Guia">{properties.map(p=><Row key={p.id} left={p.name} right={`Wi-Fi: ${p.wifi||"não informado"} • Senha: ${p.password||"não informada"}`}/>)}</Box></>}
           {tab==="settings"&&<><Title title="Configurações" desc="Dados online."/><Box title="Banco"><p className="text-white/60">Agora os dados estão no Supabase.</p><Button onClick={clearAll}>Limpar tudo</Button></Box></>}
